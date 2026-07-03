@@ -1,13 +1,53 @@
+# Entorno virtual
 .venv/
+venv/
+env/
+
+# Caché de Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
-*.pyd
+
+# Archivos de pruebas
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Git
 .git/
 .gitignore
-staticfiles/
-media/
-*.log
+
+# VS Code
 .vscode/
-db.sql
-backups/*.sql
+
+# PyCharm
+.idea/
+
+# Variables de entorno
+.env
+.env.*
+
+# Base de datos SQLite (si la usas)
+*.sqlite3
+db.sqlite3
+
+# Archivos de logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.swp
+
+# Docker Compose
+docker-compose.yml
+
+# Documentación
+README.md
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Media y estáticos generados (opcional)
+media/
+staticfiles/

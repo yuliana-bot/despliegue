@@ -1,43 +1,19 @@
-# ------------------------------------------------------------
-# Dockerfile para una aplicación Django
-# ------------------------------------------------------------
-# Etapa 1: Imagen Base
-FROM python:3.11-slim
-
-# Etapa 2: Variables de Entorno
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Etapa 3: Instalar Dependencias del Sistema
-RUN apt-get update && apt-get install -y \
-    default-libmysqlclient-dev \
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     gcc \
     pkg-config \
     libcairo2-dev \
     libpango-1.0-0 \
-    libpangocairo-1.0-0 \
+    libharfbuzz0b \
     libpangoft2-1.0-0 \
-    libgdk-pixbuf-2.0-0 \
-    libffi-dev \
-    shared-mime-info \
-    fonts-liberation \
+    libpangocairo-1.0-0 \
     && rm -rf /var/lib/apt/lists/*
-
-# Etapa 4: Configurar el Directorio de Trabajo
-WORKDIR /app
-
-# Etapa 5: Instalar Dependencias de Python
-COPY requirements.txt .
+COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Etapa 6: Copiar el Proyecto
-COPY . .
-
-# Etapa 7: Recolectar archivos estáticos para producción
-RUN python manage.py collectstatic --noinput
-
-# Etapa 8: Puerto que expone el contenedor
+COPY . /app/
 EXPOSE 8000
-
-# Etapa 9: Comando de producción (gunicorn en vez de runserver)
-CMD gunicorn sena.wsgi:application --bind 0.0.0.0:$PORT
+CMD sh -c "python sena/manage.py migrate && python sena/manage.py runserver 0.0.0.0:8000"
